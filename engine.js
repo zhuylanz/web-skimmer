@@ -25,8 +25,8 @@ async function passer(headless_bool, proxy_arr, url_arr, wait_time, n_limit, log
 	}
 
 
-	async function going(prox, wait_time){
-		console.log_passer(prox, logfile);
+	async function going(prox, url_arr, wait_time){
+		// console.log_passer(prox, logfile);
 
 		let browser = await puppeteer.launch({
 			headless : headless_bool,
@@ -40,19 +40,20 @@ async function passer(headless_bool, proxy_arr, url_arr, wait_time, n_limit, log
 		try {
 
 
-			for (j in url_arr) {
-				console.log_passer('--' + prox + ' is going to page: ' + url_arr[j], logfile);
-				await page.goto(url_arr[j], { waitUntil : 'domcontentloaded', timeout : 10000 });
+			for (j = 0; j < url_arr.length; j++) {
+				// console.log(j + ' j')
+				console.log_passer('-->' + prox + ' is going to page: ' + url_arr[j], logfile);
+				await page.goto(url_arr[j], { waitUntil : 'domcontentloaded', timeout : 20000 });
 				await page.waitFor(parseInt(wait_time));
 			}
-
+			console.log_passer('<--' + prox + ' done', logfile);
 			browser.close();
+			return;
 		} catch(e) {
-			console.log_passer(prox + ' ' + e, logfile);
+			console.log_passer('<--' + prox + ' ' + e, logfile);
 			browser.close();
 		}
-
-		return;
+		
 	}
 
 
@@ -61,19 +62,30 @@ async function passer(headless_bool, proxy_arr, url_arr, wait_time, n_limit, log
 
 		let instance = 0;
 		for (i = 0; i < proxy_arr.length; i++) {
+			// console.log(i + ' i');
 			
-			if (instance < n_limit) {	
-				going(proxy_arr[i], wait_time).then(() => { instance--; }).catch(() => { instance--; });
-				instance++;
+			if (instance < n_limit) {
+				if (i == proxy_arr.length-1) {
+					await going(proxy_arr[i], url_arr, wait_time).then(() => { instance--; }).catch(() => { instance--; });
+				} else {
+					going(proxy_arr[i], url_arr, wait_time).then(() => { instance--; }).catch(() => { instance-- });
+					instance++;
+					console.log(instance + ' instance');
+					
+				}
 				
 			} else {
 				while (instance >= n_limit ) {
+					// console.log('wait');
 					await wait(200);
 				}
+				i--;
 			}
 
 		}
 
+		// console.log('engine reach end');
+		
 		return 0;
 	} catch(e) {
 		throw new Error(e);

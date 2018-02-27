@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Wattpad Scraper</title>
+	<title>Web Skimmer</title>
 	<link rel="stylesheet" href="style.css">
 
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
@@ -14,26 +14,26 @@
 </head>
 <body>
 	<div id="vue-region">
-		<h1>Wattpad Scraper</h1>
+		<h1>Web Skimmer</h1>
 		<br>
-
-		<input class="input" id="n-limit" type="text" placeholder="Max bots at a time (Ex: 5)">
-		<input class="input" id="wait-time" type="text" placeholder="Wait between page (Ex: 5000)">
-		<input class="input" id="headless" type="checkbox">
-
+		<div class="input-region">
+			<div class="test">
+				<label>Max number of bots at a time: </label>
+				<input class="input" id="n-limit" type="text" placeholder="Ex: 5">
+				<br>
+				<label>Wait time between each page: </label>
+				<input class="input" id="wait-time" type="text" placeholder="Ex: 5000">
+			</div>
+			<br>
+			<label>Show bot: </label>
+			<input class="input" id="headless" type="checkbox">
+			<br>
+			<div class="input" id="proxy" contenteditable="true" data-text="Ex: 12.345.67.89:1234;134.53.12.38:8080;..."></div>
+			<div class="input" id="url" contenteditable="true" data-text="Ex: http://abc.com;http://abc.com/xyz;http://tata.net/;..."></div>
+			<br>
+			<input id="go" type="button" value="GO!" onclick="main_vue.go()">
+		</div>
 		<br>
-
-		<div class="input" id="proxy" contenteditable="true" data-text="Ex: 12.345.67.89:1234;134.53.12.38:8080;...">
-
-		</div>
-
-		<div class="input" id="url" contenteditable="true" data-text="Ex: http://abc.com;http://abc.com/xyz;http://tata.net/;...">
-			
-		</div>
-
-		<!-- <input type="button" value="GO!" v-on:click.once="go"> -->
-		<input id="go" type="button" value="GO!" onclick="main_vue.go()">
-
 		<div id="console">
 			<div>
 				<p><strong>CONSOLE MONITOR</strong></p>
@@ -45,8 +45,6 @@
 				</ul>
 			</div>
 		</div>
-
-
 	</div>
 
 	<script>
@@ -54,7 +52,7 @@
 			el : '#vue-region',
 
 			data : {
-				logs : []
+				logs : ['abc', 'xyz']
 			},
 
 			methods : {

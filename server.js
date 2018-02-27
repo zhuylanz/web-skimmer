@@ -24,7 +24,7 @@ io.on('connection', function(socket) {
 	console.log(sessionID);
 
 	socket.on('start', (msg, fn) => {
-		console.log(msg);
+		// console.log(msg);
 		fn('--STARTED--');
 
 		engine(msg.headless, msg.proxy, msg.url, msg.wait_time, msg.n_limit, logfile)
