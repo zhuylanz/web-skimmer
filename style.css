@@ -1,0 +1,21 @@
+div.input {
+	width: 500px;
+	height: 250px;
+	margin: auto;
+	border: 2px solid teal;
+	overflow: auto;
+	display: inline-block;
+}
+
+[contentEditable=true]:empty:not(:focus):before{
+    content:attr(data-text)
+}
+
+div#log-contain {
+	width: 500px;
+	height: 250px;
+	margin: auto;
+	border: 2px solid teal;
+	overflow: auto;
+	display: inline-block;
+}

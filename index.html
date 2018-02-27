@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wattpad Scraper</title>
+	<link rel="stylesheet" href="style.css">
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js"
+	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"
+	integrity="sha256-WPeFPWD3PZQUDrpFnDM1N2KadNVwCfNS4cCZ78b76T8="
+	crossorigin="anonymous"></script>
+</head>
+<body>
+	<div id="vue-region">
+		<h1>Wattpad Scraper</h1>
+		<br>
+
+		<input class="input" id="n-limit" type="text" placeholder="Max bots at a time (Ex: 5)">
+		<input class="input" id="wait-time" type="text" placeholder="Wait between page (Ex: 5000)">
+		<input class="input" id="headless" type="checkbox">
+
+		<br>
+
+		<div class="input" id="proxy" contenteditable="true" data-text="Ex: 12.345.67.89:1234;134.53.12.38:8080;...">
+
+		</div>
+
+		<div class="input" id="url" contenteditable="true" data-text="Ex: http://abc.com;http://abc.com/xyz;http://tata.net/;...">
+			
+		</div>
+
+		<!-- <input type="button" value="GO!" v-on:click.once="go"> -->
+		<input id="go" type="button" value="GO!" onclick="main_vue.go()">
+
+		<div id="console">
+			<div>
+				<p><strong>CONSOLE MONITOR</strong></p>
+			</div>
+			<hr/>
+			<div id="log-contain">
+				<ul id="logs">
+					<li v-for="log in logs">{{ log }}</li>
+				</ul>
+			</div>
+		</div>
+
+
+	</div>
+
+	<script>
+		let main_vue = new Vue({
+			el : '#vue-region',
+
+			data : {
+				logs : []
+			},
+
+			methods : {
+				go : function() {
+					socket.emit('start', {
+						n_limit : $('#n-limit').val(),
+						wait_time : $('#wait-time').val(),
+						headless : !$('#headless').is(':checked'),
+						proxy : $('#proxy').text().split(';'),
+						url : $('#url').text().split(';')
+					}, (res) => { console.log(res); });
+					$('#go').prop('onclick', null).off('click');
+					console.log('click!');
+				}
+			}
+
+		});
+
+
+		let socket = io();
+
+		socket.on('log', (loggings) => {
+			main_vue.logs = loggings;
+			$("#log-contain").scrollTop($('#log-contain')[0].scrollHeight);
+			console.log('logging...');
+		});
+
+		socket.on('fn-finish', (msg) => {
+			console.log(msg);
+			$('#go').on('click', main_vue.go);
+			$("#log-contain").scrollTop($('#log-contain')[0].scrollHeight);
+			socket.emit('stop-log', 'time to stop logging', (res) => { console.log(res); });
+		});
+
+		// socket.on('log_watt', (logs) => {
+		// 	main_vue.log_watt = logs;
+		// 	console.log('scroll');
+		// 	$("#log-container").scrollTop($('#log-container')[0].scrollHeight);
+		// });
+
+		// socket.on('log_watt ended', (res) => {
+		// 	$('#btn_scrape').on('click', main_vue.scrape);
+		// 	$("#log-container").scrollTop($('#log-container')[0].scrollHeight);
+		// });
+
+		// $('form').on('submit', () => { return false; });
+		// $('#url').on('keyup', function(e) {
+		// 	if(e.keyCode === 13) {
+		// 		$('#btn_scrape').click();
+		// 	}
+		// });
+
+		$(document).ready(function() { });
+	</script>
+</body>
+</html>

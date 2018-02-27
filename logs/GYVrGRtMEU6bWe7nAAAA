@@ -1,0 +1,9 @@
+61.7.177.99:3128
+185.93.3.123:8080
+34.201.2.115:3128
+--185.93.3.123:8080 is going to page: http://hoichowebsite.com
+--34.201.2.115:3128 is going to page: http://hoichowebsite.com
+--61.7.177.99:3128 is going to page: http://hoichowebsite.com
+61.7.177.99:3128 Error: net::ERR_CONNECTION_TIMED_OUT
+34.201.2.115:3128 Error: Navigation Timeout Exceeded: 10000ms exceeded
+--185.93.3.123:8080 is going to page: http://hoichowebsite.com/category/thi-truong-va-kinh-te/
