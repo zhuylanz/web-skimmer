@@ -26,6 +26,9 @@
 				<br>
 				<label>Variance: </label>
 				<input class="input" id="variance" type="text" placeholder="Ex: 5 (s)">
+				<br>
+				<label>Cron: </label>
+				<input class="input" id="cron" type="text" placeholder="Ex: * * * * *">
 			</div>
 			<br>
 			<label>Show bot: </label>
@@ -66,7 +69,8 @@
 						headless : !$('#headless').is(':checked'),
 						proxy : $('#proxy').text().split(';'),
 						url : $('#url').text().split(';'),
-						variance : $('#variance').text().split(';')*1000
+						variance : $('#variance').text()*1000,
+						cron : $('#cron').text()
 					}, (res) => { console.log(res); });
 					$('#go').prop('onclick', null).off('click');
 					console.log('click!');
