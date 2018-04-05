@@ -3,9 +3,10 @@ const fs = require('fs');
 
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
+const cron = require('node-cron');
 const engine = require('./engine.js');
 
 
@@ -26,22 +27,24 @@ io.on('connection', function(socket) {
 	socket.on('start', (msg, fn) => {
 		// console.log(msg);
 		fn('--STARTED--');
+		cron.schedule(msg.cron, function() {
+			console.log('!!cron is working!!');
+			engine(msg.headless, msg.proxy, msg.url, msg.wait_time, msg.n_limit, logfile, msg.variance)
+			.then(res => {
+				socket.emit('fn-finish', 'exit code : ' + res);
+				console.log('--PASSER DONE--');
+			})
+			.catch(err => {
+				console.log(err);
+				socket.emit('fn-finish', 'Error : ' + err);
+				console.log('--PASSER ERROR--');
+			});
 
-		engine(msg.headless, msg.proxy, msg.url, msg.wait_time, msg.n_limit, logfile)
-		.then(res => {
-			socket.emit('fn-finish', 'exit code : ' + res);
-			console.log('--PASSER DONE--');
-		})
-		.catch(err => {
-			console.log(err);
-			socket.emit('fn-finish', 'Error : ' + err);
-			console.log('--PASSER ERROR--');
+			logger = setInterval(() => {
+				let loggings = fs.readFileSync(logfile, 'utf8');
+				socket.emit('log', loggings.split('\n'));
+			}, 500);
 		});
-
-		logger = setInterval(() => {
-			let loggings = fs.readFileSync(logfile, 'utf8');
-			socket.emit('log', loggings.split('\n'));
-		}, 500);
 	});
 
 	socket.on('stop-log', (msg, fn) => {
@@ -56,4 +59,4 @@ io.on('connection', function(socket) {
 });
 
 //-----listening-----//
-http.listen(1544, () => { console.log('Bot Server Up and Running on Port 1544'); });
+server.listen(1544, () => { console.log('Bot Server Up and Running on Port 1544'); });

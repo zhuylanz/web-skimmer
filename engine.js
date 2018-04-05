@@ -15,7 +15,7 @@ console.log_passer = function(d, logfile, option) {
 }
 
 
-async function passer(headless_bool, proxy_arr, url_arr, wait_time, n_limit, logfile) {
+async function passer(headless_bool, proxy_arr, url_arr, wait_time, n_limit, logfile, variance) {
 	
 
 	function wait(time) {
@@ -25,9 +25,9 @@ async function passer(headless_bool, proxy_arr, url_arr, wait_time, n_limit, log
 	}
 
 
-	async function going(prox, url_arr, wait_time){
+	async function going(prox, url_arr, wait_time) {
 		// console.log_passer(prox, logfile);
-
+		let random = Math.random()*variance;
 		let browser = await puppeteer.launch({
 			headless : headless_bool,
 			args: [
@@ -44,7 +44,7 @@ async function passer(headless_bool, proxy_arr, url_arr, wait_time, n_limit, log
 				// console.log(j + ' j')
 				console.log_passer('-->' + prox + ' is going to page: ' + url_arr[j], logfile);
 				await page.goto(url_arr[j], { waitUntil : 'domcontentloaded', timeout : 20000 });
-				await page.waitFor(parseInt(wait_time));
+				await page.waitFor(parseInt(wait_time) + random);
 			}
 			console.log_passer('<--' + prox + ' done', logfile);
 			browser.close();

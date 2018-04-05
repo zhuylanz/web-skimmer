@@ -22,7 +22,10 @@
 				<input class="input" id="n-limit" type="text" placeholder="Ex: 5">
 				<br>
 				<label>Wait time between each page: </label>
-				<input class="input" id="wait-time" type="text" placeholder="Ex: 5000">
+				<input class="input" id="wait-time" type="text" placeholder="Ex: 5 (s)">
+				<br>
+				<label>Variance: </label>
+				<input class="input" id="variance" type="text" placeholder="Ex: 5 (s)">
 			</div>
 			<br>
 			<label>Show bot: </label>
@@ -59,10 +62,11 @@
 				go : function() {
 					socket.emit('start', {
 						n_limit : $('#n-limit').val(),
-						wait_time : $('#wait-time').val(),
+						wait_time : $('#wait-time').val()*1000,
 						headless : !$('#headless').is(':checked'),
 						proxy : $('#proxy').text().split(';'),
-						url : $('#url').text().split(';')
+						url : $('#url').text().split(';'),
+						variance : $('#variance').text().split(';')*1000
 					}, (res) => { console.log(res); });
 					$('#go').prop('onclick', null).off('click');
 					console.log('click!');
